@@ -7,11 +7,11 @@ class Player:
                           items.Longsword(),
                           items.HolySymbol(),
                           'Gold(5)',
-                          'Bread']
+                          items.CrustyBread()]
         
         self.x = 1
         self.y = 2
-        self.hp = 100
+        self.hp = 25
         
     def move(self, dx, dy):
         self.x += dx
@@ -59,6 +59,32 @@ class Player:
             print("You killed the {}!".format(enemy.name))
         else:
             print("The {} still stands before you".format(enemy.name))
+            
+    def heal(self):
+        consumables = [item for item in self.inventory if isinstance(item, items.Consumable)]
+        
+        if not consumables:
+            print("You don't have anything to heal you!")
+            return
+        
+        for i, item in enumerate(consumables, 1):
+            print("Choose an item to use to heal: ")
+            print("{}. {}".format(i, item))
+            
+        valid = False
+        while not valid:
+            choice = input("")
+            try:
+                to_eat = consumables[int(choice) - 1]
+                self.hp = min(25, self.hp + to_eat.healing_value)
+                self.inventory.remove(to_eat)
+                print("Healed for {}. Current HP: {}".format(to_eat.healing_value, self.hp))
+                valid = True
+            except (ValueError, IndexError):
+                print("Invalid choice, try again.")
+                
+            
+            
             
         
         

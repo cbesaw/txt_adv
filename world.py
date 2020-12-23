@@ -1,5 +1,6 @@
 import random
 import enemies
+import sys
 
 
 class MapTile:
@@ -17,26 +18,8 @@ class MapTile:
 class StartTile(MapTile):
     def intro_text(self):
         return """
-        After five days of traveling you arrive in the abandoned city of 
-        Norbrook. You are here to look for your Lord, who disappeared after
-        traveling to the city over two months ago. Norbrook has been abandoned
-        for over a hundred years, but hushed whispers spread rumors of sound
-        and shadow coming from the once bustling city. 
-        
-        Your Lord never told you why he came to this place, but the head cleric
-        of your order has tasked you with finding information about his
-        whereabouts.
-        
-        You feel nervous. Your training had only just begun as a paladin of
-        the order when your lord disappeared. Shadows and light dance in your
-        periphery. It is hard to tell if there is movement or whether your
-        tired eyes are playing tricks on you. 
-        
-        You stand in an intersection after entering the city gate. The city,
-        while abandoned, surprisingly does not look ruinous. 
-        
-        Before you are two alleyways to the north and east. A door to the city 
-        guard/'s quarter lies ajar to your west. 
+        Before you are two alleyways to the north and east. A door to a city 
+        guard's post lies ajar to your west. 
         
         You may also abandon your mission by leaving through the gate behind
         you to the south.
@@ -61,13 +44,13 @@ class EncounterTile(MapTile):
             self.enemy = enemies.Zombie()
             self.alive_text = "A zombified townsperson staggers "\
                               "towards you."
-            self.dead_text = "The remains of the townsperson lies "\
+            self.dead_text = "The remains of the townsperson lie "\
                              "motionless on the ground."
         else:
             self.enemy = enemies.Zombie2()
             self.alive_text = "A zombified guardsman staggers "\
                               "towards you."
-            self.dead_text = "The remains of the guardsman lies "\
+            self.dead_text = "The remains of the guardsman lie "\
                              "motionless on the ground."
             
         super().__init__(x, y)
@@ -82,13 +65,22 @@ class EncounterTile(MapTile):
             print("The {} attacks you for {} damage.".format(self.enemy.name,
                                                              self.enemy.damage))
             
+class EndingTile1(MapTile):
+    def intro_text(self):
+        return """
+    A sense of dread overwhelms you. Your body and mind in sync tell you to flee...
+    
+    You ride hard away from Norbrook. Every mile between you and that cursed place serves
+    as a reminder of your cowardice. 
+    """
+
         
 
 world_map = [
     [None, VictoryTile(1,0), None],
     [None, EncounterTile(1,1), None],
     [BoringTile(0,2), StartTile(1,2), EncounterTile(2,2)],
-    [None, BoringTile(1,3), None]
+    [None, EndingTile1(1,3), None]
     ]
 
 
