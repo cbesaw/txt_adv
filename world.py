@@ -73,7 +73,35 @@ class EndingTile1(MapTile):
     You ride hard away from Norbrook. Every mile between you and that cursed place serves
     as a reminder of your cowardice. 
     """
+    
+def is_dsl_valid(dsl):
+    if dsl.count("|ST|") != 1:
+        return False
+    if dsl.count("|VT|") == 0:
+        return False
+    lines = dsl.splitlines()
+    lines = [l for l in lines if l]
+    pipe_counts = [line.count("|") for line in lines]
+    for count in pipe_counts:
+        if count != pipe_counts[0]:
+            return False
+        
+    return True
 
+tile_type_dict = {"VT": VictoryTile,
+                  "ET": EncounterTile,
+                  "ST": StartTile,
+                  "EN1": EndingTile1,
+                  " ": None}
+
+
+
+world_dsl = """
+| |VT| |
+| |ET| |
+|BT|ST|ET|
+| |EN1| |
+"""
         
 
 world_map = [
