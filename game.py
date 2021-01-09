@@ -67,6 +67,7 @@ def play():
         You stand in an intersection after entering the city gate. The city,
         while abandoned, surprisingly does not look ruinous. 
           """)
+    world.parse_world_dsl()
     player = Player()
     while True:
         room = world.tile_at(player.x, player.y)

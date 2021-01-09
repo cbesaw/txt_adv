@@ -6,12 +6,12 @@ class Player:
         self.inventory = [items.Dagger(),
                           items.Longsword(),
                           items.HolySymbol(),
-                          'Gold(5)',
                           items.CrustyBread()]
         
-        self.x = 1
-        self.y = 2
+        self.x = world.start_tile_location[0]
+        self.y = world.start_tile_location[1]
         self.hp = 25
+        self.gold = 5
         
     def move(self, dx, dy):
         self.x += dx
@@ -33,6 +33,7 @@ class Player:
         print("Inventory:")
         for item in self.inventory:
             print('* ' + str(item))
+        print("Gold: {}".format(self.gold))
         
     def most_powerful_weapon(self):
         max_damage = 0

@@ -1,3 +1,6 @@
+from die_roll import gen_roll
+
+
 
 class Weapon:
     def __init__(self):
@@ -25,7 +28,8 @@ class Dagger(Weapon):
         self.name = "Dagger"
         self.description = "A small old dagger. " \
                            "Better than nothing..."
-        self.damage = 2.5
+        self.damage = gen_roll(1, 4, 1)
+        self.value = 10
         
 
 class Longsword(Weapon):
@@ -33,7 +37,8 @@ class Longsword(Weapon):
         self.name = "Longsword"
         self.description = "An old trainee's longsword. " \
                            "It was passed on to you by your lord."
-        self.damage = 5
+        self.damage = gen_roll(1, 8, 1)
+        self.value = 35
         
 
         
@@ -42,12 +47,20 @@ class HolySymbol(Utility):
         self.name = "Holy Symbol"
         self.description = "A worn holy symbol of your god" \
                            "Given to you by the head cleric of your order."
+        self.value = 5
 
 
 class CrustyBread(Consumable):
     def __init__(self):
         self.name = "Crusty Bread"
-        self.healing_value = 5
+        self.healing_value = gen_roll(1, 4, 1)
+        self.value = 2.5
+        
+class HealingPotion(Consumable):
+    def __init__(self):
+        self.name = "Healing Potion"
+        self.healing_value = gen_roll(1, 8, 1)
+        self.value = 60
                            
                            
 

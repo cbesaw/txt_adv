@@ -73,7 +73,15 @@ class EndingTile1(MapTile):
     You ride hard away from Norbrook. Every mile between you and that cursed place serves
     as a reminder of your cowardice. 
     """
-    
+ 
+world_dsl = """
+| |VT| |
+| |ET| |
+|ET|ST|ET|
+| |EN1| |
+"""
+            
+ 
 def is_dsl_valid(dsl):
     if dsl.count("|ST|") != 1:
         return False
@@ -94,22 +102,25 @@ tile_type_dict = {"VT": VictoryTile,
                   "EN1": EndingTile1,
                   " ": None}
 
-
-
-world_dsl = """
-| |VT| |
-| |ET| |
-|BT|ST|ET|
-| |EN1| |
-"""
+def parse_world_dsl():
+    if not is_dsl_valid(world_dsl):
+        raise SyntaxError("DSL is invalid!")
         
+    dsl_lines = world_dsl.splitlines()
+    dsl_lines = [x for x in dsl_lines if x]
+    
+    for y, dsl_row in enumerate(dsl_lines):
+        row = []
+        dsl_cells = dsl_row.split("|")
+        dsl_cells = [c for c in dsl_cells if c]
+        for x, dsl_cell in enumerate(dsl_cells):
+            tile_type = tile_type_dict[dsl_cell]
+            row.append(tile_type(x, y) if tile_type else None)
+            
+        world_map.append(row)
 
-world_map = [
-    [None, VictoryTile(1,0), None],
-    [None, EncounterTile(1,1), None],
-    [BoringTile(0,2), StartTile(1,2), EncounterTile(2,2)],
-    [None, EndingTile1(1,3), None]
-    ]
+
+world_map = []
 
 
 def tile_at(x, y):
