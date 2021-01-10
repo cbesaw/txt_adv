@@ -1,6 +1,7 @@
 import random
 import enemies
 import sys
+import npc
 
 
 class MapTile:
@@ -64,6 +65,13 @@ class EncounterTile(MapTile):
             player.hp = player.hp - self.enemy.damage
             print("The {} attacks you for {} damage.".format(self.enemy.name,
                                                              self.enemy.damage))
+ 
+            
+class TraderTile(MapTile):
+    def __init__(self, x, y):
+        self.trader = npc.Trader()
+        super().__init__(x, y)
+            
             
 class EndingTile1(MapTile):
     def intro_text(self):
@@ -74,6 +82,9 @@ class EndingTile1(MapTile):
     as a reminder of your cowardice. 
     """
  
+    
+#Map Building
+    
 world_dsl = """
 | |VT| |
 | |ET| |
