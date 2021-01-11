@@ -71,6 +71,81 @@ class TraderTile(MapTile):
     def __init__(self, x, y):
         self.trader = npc.Trader()
         super().__init__(x, y)
+        
+
+    def trade(self, buyer, seller):
+        for i, item in enumerate(seller.inventory, 1):
+            print("{}. {} - {} Gold".format(i, item.name,
+                                        item.value))
+            while True:
+                user_input = input("Choose an item or press Q to exit: ")
+                if user_input in ['Q', 'q']:
+                    return
+                else:
+                    try:
+                        choice = int(user_input)
+                        to_swap = seller.inventory[choice - 1]
+                        self.swap(seller, buyer, to_swap)
+                    except ValueError:
+                        print("Invalid choice!")
+                        
+                        
+    def swap(self,  seller, buyer, item):
+        if item.value > buyer.gold:
+            print("You don't have enough gold.")
+            return 
+        seller.inventory.remove(item)
+        buyer.inventory.append(item)
+        seller.gold = seller.gold + item.value
+        buyer.gold = buyer.gold - item.value
+        print("You bought a {} for {} gold.".format(item.name,
+                                                    item.value))
+        
+    def check_if_trade(self, player):
+        while True:
+            print("Would you like to (B)uy, (S)ell or (Q)uit?")
+            user_input = input()
+            if user_input in ['Q', 'q']:
+                return
+            elif user_input in ['B', 'b']:
+                print("What'a buyin? ")
+                self.trade(buyer=player, seller=self.trader)
+            elif user_input in ['S', 's']:
+                print("What'a sellin? ")
+                self.trade(buyer=self.trader, seller=player)
+            else:
+                print("Invalid choice!")
+                
+    def intro_text(self):
+        return """
+        A frail hooded humanoid sits in the middle of a dilapidated house. The figure 
+        greets you with a toothy smile and offers to trade items for gold.
+        """
+        
+class GuardPostTile1(MapTile):
+    def __init__(self, x, y):
+        self.gold = random.randint(1, 25)
+        self.gold_claimed = False
+        super().__init__(x, y)
+        
+    def modify_player(self, player):
+        if not self.gold_claimed:
+            self.gold_claimed = True
+            print("You found {} gold!".format(self.gold))
+            player.gold = player.gold + self.gold
+                      
+    def intro_text(self):
+        if self.gold_claimed:
+            return """
+            The guard post stands eerily empty. You feel the urge to move on.
+            """
+        else:
+            return """
+            You find an abandoned guard house. Hastily abandoned, the previous
+            occupant left their gold and belongings on the table. You pick them up.
+            """
+            
+        
             
             
 class EndingTile1(MapTile):
@@ -86,10 +161,10 @@ class EndingTile1(MapTile):
 #Map Building
     
 world_dsl = """
-| |VT| |
-| |ET| |
-|ET|ST|ET|
-| |EN1| |
+| |VT| | |
+| |ET| | |
+|GP1|ST|ET|TT|
+| |EN1| | |
 """
             
  
@@ -111,7 +186,11 @@ tile_type_dict = {"VT": VictoryTile,
                   "ET": EncounterTile,
                   "ST": StartTile,
                   "EN1": EndingTile1,
+                  "GP1": GuardPostTile1,
+                  "TT": TraderTile,
                   " ": None}
+
+start_tile_location = None
 
 def parse_world_dsl():
     if not is_dsl_valid(world_dsl):
@@ -126,6 +205,9 @@ def parse_world_dsl():
         dsl_cells = [c for c in dsl_cells if c]
         for x, dsl_cell in enumerate(dsl_cells):
             tile_type = tile_type_dict[dsl_cell]
+            if tile_type == StartTile:
+                global start_tile_location
+                start_tile_location = x, y
             row.append(tile_type(x, y) if tile_type else None)
             
         world_map.append(row)
